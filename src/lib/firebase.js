@@ -63,15 +63,14 @@ const facebookProvider = new FacebookAuthProvider();
 
 export const signInWithFacebook = async () => {
   try {
+    auth.languageCode = 'en'; // Force English language for Facebook popup
     const result = await signInWithPopup(auth, facebookProvider);
     const user = result.user;
 
-    // Check if user exists in Firestore
     const userRef = doc(db, "users", user.uid);
     const userSnap = await getDoc(userRef);
 
     if (!userSnap.exists()) {
-      // If new user, store data
       await setDoc(userRef, {
         username: user.displayName,
         email: user.email,
