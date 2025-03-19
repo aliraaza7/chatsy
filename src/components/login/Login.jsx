@@ -6,7 +6,7 @@ import {
   signInWithEmailAndPassword,
   GoogleAuthProvider, signInWithPopup
 } from "firebase/auth";
-import { auth, db, signInWithGoogle } from "../../lib/firebase";
+import { auth, db, signInWithFacebook, signInWithGoogle } from "../../lib/firebase";
 import { doc, setDoc } from "firebase/firestore";
 import upload from "../../lib/upload";
 
@@ -87,6 +87,15 @@ function Login() {
     }
   };
 
+  const handleFacebookLogin = async () => {
+    try {
+      const user = await signInWithFacebook();
+      toast.success(`Welcome ${user.displayName}`);
+    } catch (err) {
+      toast.error("Facebook login failed");
+    }
+  };
+
   return (
     <div className="login">
       <div className="item">
@@ -119,7 +128,9 @@ function Login() {
           <button disabled={loading}>
             {loading ? "Loading..." : "Sign Up"}
           </button>
-          <button onClick={handleGoogleSignUp}>Sign Up with Google</button>
+          <button onClick={handleGoogleSignUp} style={{backgroundColor: "green"}}>Sign Up with Google</button>
+          <button onClick={handleFacebookLogin} style={{backgroundColor: "blue"}}>Sign in with Facebook</button>
+
 
         </form>
       </div>

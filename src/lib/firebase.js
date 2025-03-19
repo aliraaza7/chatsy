@@ -1,6 +1,16 @@
 import { initializeApp } from "firebase/app";
-import { getAuth, GoogleAuthProvider, signInWithPopup } from "firebase/auth";
-import { getFirestore, doc, setDoc, getDoc } from "firebase/firestore";
+import { 
+  getAuth, 
+  GoogleAuthProvider, 
+  FacebookAuthProvider, 
+  signInWithPopup 
+} from "firebase/auth";
+import { 
+  getFirestore, 
+  doc, 
+  setDoc, 
+  getDoc 
+} from "firebase/firestore";
 import { getStorage } from "firebase/storage";
 
 const firebaseConfig = {
@@ -44,6 +54,36 @@ export const signInWithGoogle = async () => {
     return user;
   } catch (error) {
     console.error("Google sign-in failed", error);
+    throw error;
+  }
+};
+
+// Facebook Authentication
+const facebookProvider = new FacebookAuthProvider();
+
+export const signInWithFacebook = async () => {
+  try {
+    const result = await signInWithPopup(auth, facebookProvider);
+    const user = result.user;
+
+    // Check if user exists in Firestore
+    const userRef = doc(db, "users", user.uid);
+    const userSnap = await getDoc(userRef);
+
+    if (!userSnap.exists()) {
+      // If new user, store data
+      await setDoc(userRef, {
+        username: user.displayName,
+        email: user.email,
+        avatar: user.photoURL,
+        id: user.uid,
+        blocked: [],
+      });
+    }
+
+    return user;
+  } catch (error) {
+    console.error("Facebook sign-in failed", error);
     throw error;
   }
 };
