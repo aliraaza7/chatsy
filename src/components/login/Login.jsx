@@ -4,9 +4,9 @@ import { toast } from "react-toastify";
 import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
-  GoogleAuthProvider, signInWithPopup
+  signInWithFacebook, signInWithGoogle
 } from "firebase/auth";
-import { auth, db, signInWithFacebook, signInWithGoogle } from "../../lib/firebase";
+import { auth, db,  } from "../../lib/firebase";
 import { doc, setDoc } from "firebase/firestore";
 import upload from "../../lib/upload";
 
