@@ -4,8 +4,9 @@ import { toast } from "react-toastify";
 import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
+  GoogleAuthProvider, signInWithPopup
 } from "firebase/auth";
-import { auth, db } from "../../lib/firebase";
+import { auth, db, signInWithGoogle } from "../../lib/firebase";
 import { doc, setDoc } from "firebase/firestore";
 import upload from "../../lib/upload";
 
@@ -77,6 +78,15 @@ function Login() {
     }
   };
 
+  const handleGoogleSignUp = async () => {
+    try {
+      const user = await signInWithGoogle();
+      toast.success(`Welcome ${user.displayName}`);
+    } catch (err) {
+      toast.error("Google signup failed");
+    }
+  };
+
   return (
     <div className="login">
       <div className="item">
@@ -109,6 +119,8 @@ function Login() {
           <button disabled={loading}>
             {loading ? "Loading..." : "Sign Up"}
           </button>
+          <button onClick={handleGoogleSignUp}>Sign Up with Google</button>
+
         </form>
       </div>
     </div>
